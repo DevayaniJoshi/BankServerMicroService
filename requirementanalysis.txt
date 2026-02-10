@@ -1,0 +1,19 @@
+Requirement analysis of bank server:
+FUNCTIONAL REQUIREMENT:
+
+bank should be able to process (add, delete) transactions for acc
+able to load csv data from into acc db
+we should be able to validate transaction
+if transaction is invalid there should be a second model to find the reasoning behind it
+ability to share the transactional logs data to the security
+integrate agentic ai
+
+NON-FUNCTIONAL REQUIREMENTS:
+Ensuring data integrity
+ability to process 1000000 transact
+
+Requirement analysis of  FAke bank server
+
+Dataset Ingestion
+Transaction Parsing
+Transaction Replay Mechanism
