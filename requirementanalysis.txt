@@ -1,7 +1,7 @@
 Requirement analysis of bank server:
 FUNCTIONAL REQUIREMENT:
 
-bank should be able to process (add, delete) transactions for acc
+bank should be able to process (add, delete, get , update) transactions for acc(crud op for acc and trans)
 able to load csv data from into acc db
 we should be able to validate transaction
 if transaction is invalid there should be a second model to find the reasoning behind it
