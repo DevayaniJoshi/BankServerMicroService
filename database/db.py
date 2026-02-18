@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
-DATABASE_URL = "postgresql://user:password@localhost:5432/yourdb"
+DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/bank_ms_db"
 
 engine = create_engine(DATABASE_URL)
 
@@ -21,3 +21,4 @@ def get_db():
         yield db
     finally:
         db.close()
+
