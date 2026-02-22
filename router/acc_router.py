@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database.db import get_db
 from models.account import Account
 from dto.acc_create_dto import AccountCreate
+from dto.acc_update_dto import AccountUpdate
 
 router = APIRouter(
     prefix="/accounts",
@@ -10,7 +11,7 @@ router = APIRouter(
 )
 
 #create acc
-@router.post("/")
+@router.post("/", status_code =201)
 def create_account(account: AccountCreate, db: Session = Depends(get_db)):
     new_account = Account(
         account_number=account.account_number,
@@ -41,17 +42,28 @@ def get_all_accounts(db: Session = Depends(get_db)):
 
 # UPDATE ACCOUNT 
 # TODO:TESTING REQUIRED
-@router.put("/{account_id}")
-def update_account(account_id: int, balance: float, db: Session = Depends(get_db)):
-    account = db.query(Account).filter(Account.id == account_id).first()
-    if not account:
+@router.patch("/{account_id}")
+def update_account(
+    account_id: int,
+    account: AccountUpdate,
+    db: Session = Depends(get_db)
+):
+    db_account = db.query(Account).filter(Account.id == account_id).first()
+
+    if not db_account:
         raise HTTPException(status_code=404, detail="Account not found")
 
-    account.balance = balance
-    db.commit()
-    db.refresh(account)
-    return account
+    # Update only provided fields
+    if account.balance is not None:
+        db_account.balance = account.balance
 
+    if account.account_holder_name is not None:
+        db_account.account_holder_name = account.account_holder_name
+
+    db.commit()
+    db.refresh(db_account)
+
+    return db_account
 
 # DELETE ACCOUNT
 # TODO:TESTING REQUIRED
