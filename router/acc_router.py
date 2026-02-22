@@ -5,7 +5,7 @@ from models.account import Account
 from dto.acc_create_dto import AccountCreate
 
 router = APIRouter(
-    prefix="/accounts",
+    prefix="/api/accounts",
     tags=["Accounts"]
 )
 
