@@ -3,5 +3,8 @@ from typing import Optional
 
 
 class AccountUpdate(BaseModel):
-    account_holder_name: Optional[str] = None
-    balance: Optional[float] = None
+    accountId   :Optional[str] = None
+    bankId  : Optional[str] = None
+    entityId  : Optional[str] = None 
+    entityName  : Optional[str] = None
+    bankName  : Optional[str] = None

@@ -14,9 +14,11 @@ router = APIRouter(
 @router.post("/", status_code =201)
 def create_account(account: AccountCreate, db: Session = Depends(get_db)):
     new_account = Account(
-        account_number=account.account_number,
-        account_holder_name=account.account_holder_name,
-        balance=account.balance
+        accountId = account.accountId,
+        bankId = account.bankId,
+        entityId = account.entityId,
+        entityName = account.entityName,
+        bankName = account.bankName
     )
 
     db.add(new_account)
@@ -48,17 +50,24 @@ def update_account(
     account: AccountUpdate,
     db: Session = Depends(get_db)
 ):
-    db_account = db.query(Account).filter(Account.id == account_id).first()
+    db_account = db.query(Account).filter(Account.accountId == account_id).first()
 
     if not db_account:
         raise HTTPException(status_code=404, detail="Account not found")
 
     # Update only provided fields
-    if account.balance is not None:
-        db_account.balance = account.balance
+    if account.entityId is not None:
+        db_account.entityId = account.entityId
 
-    if account.account_holder_name is not None:
-        db_account.account_holder_name = account.account_holder_name
+    if account.bankId is not None:
+        db_account.bankId = account.bankId
+
+    if account.bankName is not None:
+        db_account.bankName = account.bankName
+
+    if account.entityName is not None:
+        db_account.entityName = account.entityName
+
 
     db.commit()
     db.refresh(db_account)
@@ -69,7 +78,7 @@ def update_account(
 # TODO:TESTING REQUIRED
 @router.delete("/{account_id}")
 def delete_account(account_id: int, db: Session = Depends(get_db)):
-    account = db.query(Account).filter(Account.id == account_id).first()
+    account = db.query(Account).filter(Account.accountId == account_id).first()
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
 

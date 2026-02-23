@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 
 class AccountCreate(BaseModel):
-    account_number: str
-    account_holder_name: str
-    balance: float
+    accountId   : str
+    bankId  : str
+    entityId  : str
+    entityName  : str
+    bankName  : str
