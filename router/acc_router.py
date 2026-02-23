@@ -6,7 +6,7 @@ from dto.acc_create_dto import AccountCreate
 from dto.acc_update_dto import AccountUpdate
 
 router = APIRouter(
-    prefix="/accounts",
+    prefix="/api/accounts",
     tags=["Accounts"]
 )
 
