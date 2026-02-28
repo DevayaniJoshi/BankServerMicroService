@@ -3,8 +3,8 @@ from typing import Optional
 
 
 class AccountUpdate(BaseModel):
-    accountId   :Optional[str] = None
-    bankId  : Optional[str] = None
-    entityId  : Optional[str] = None 
+    accountId   :Optional[int] = None
+    bankId  : Optional[int] = None
+    entityId  : Optional[int] = None 
     entityName  : Optional[str] = None
     bankName  : Optional[str] = None
