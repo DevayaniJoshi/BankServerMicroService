@@ -4,7 +4,7 @@ from database.db import get_db
 from database.db import get_db, engine, Base
 from models.account import Account   # IMPORTANT: Must import model
 from router.acc_router import router as account_router
-
+from router.transaction_router import router as transaction_router
 
 app = FastAPI()
 
@@ -13,6 +13,7 @@ Base.metadata.create_all(bind=engine)
 
 # 🔹 Include Account Router
 app.include_router(account_router)
+app.include_router(transaction_router)
 
 
 @app.post("/user/{username}/photo/{photoId}")
