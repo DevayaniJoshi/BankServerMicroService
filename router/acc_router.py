@@ -4,7 +4,7 @@ from database.db import get_db
 from models.account import Account
 from dto.acc_create_dto import AccountCreate
 from dto.acc_update_dto import AccountUpdate
-
+from typing import List
 router = APIRouter(
     prefix="/api/accounts",
     tags=["Accounts"]
@@ -30,7 +30,7 @@ def create_account(account: AccountCreate, db: Session = Depends(get_db)):
 # GET single ACCOUNT
 @router.get("/{account_id}")
 def get_account(account_id: int, db: Session = Depends(get_db)):
-    account = db.query(Account).filter(Account.id == account_id).first()
+    account = db.query(Account).filter(Account.accountId == account_id).first()
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
     return account
@@ -85,3 +85,5 @@ def delete_account(account_id: int, db: Session = Depends(get_db)):
     db.delete(account)
     db.commit()
     return {"message": "Account deleted successfully"}
+
+   
