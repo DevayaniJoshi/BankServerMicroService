@@ -29,7 +29,7 @@ def create_account(account: AccountCreate, db: Session = Depends(get_db)):
 
 # GET single ACCOUNT
 @router.get("/{account_id}")
-def get_account(account_id: int, db: Session = Depends(get_db)):
+def get_account(account_id: str, db: Session = Depends(get_db)):
     account = db.query(Account).filter(Account.accountId == account_id).first()
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
@@ -46,7 +46,7 @@ def get_all_accounts(db: Session = Depends(get_db)):
 # TODO:TESTING REQUIRED
 @router.patch("/{account_id}")
 def update_account(
-    account_id: int,
+    account_id: str,
     account: AccountUpdate,
     db: Session = Depends(get_db)
 ):
@@ -77,7 +77,7 @@ def update_account(
 # DELETE ACCOUNT
 # TODO:TESTING REQUIRED
 @router.delete("/{account_id}")
-def delete_account(account_id: int, db: Session = Depends(get_db)):
+def delete_account(account_id: str, db: Session = Depends(get_db)):
     account = db.query(Account).filter(Account.accountId == account_id).first()
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")

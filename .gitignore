@@ -36,3 +36,5 @@ dist/
 
 # FastAPI / Uvicorn
 *.sqlite3
+
+**.csv

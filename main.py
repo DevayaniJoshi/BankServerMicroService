@@ -16,13 +16,6 @@ app.include_router(account_router)
 app.include_router(transaction_router)
 
 
-@app.post("/user/{username}/photo/{photoId}")
-def user_photo(username: str, photoId: int, size: int, type: str = "jpeg"):
-    return {
-        "message": f"The user name is {username}, the id is {photoId}, the size is {size}, and type is {type}"
-    }
-
-
 @app.on_event("startup")
 def test_db_connection():
     try:
