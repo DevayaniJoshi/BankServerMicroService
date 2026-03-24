@@ -17,3 +17,8 @@ Requirement analysis of  FAke bank server
 Dataset Ingestion
 Transaction Parsing
 Transaction Replay Mechanism
+
+After a transaction occurs a notification will be sent to kafka and later will be processed.
+Making of an endpoint where we can find past 'n' transactions of an account in a server.
+making of an filter table to black or gray list an account (col: accid & blacklisting level); if an acc dosent exist in filterlevel it is bydefault whitelisted
+Checking how many transactions are blocked, reviewed ,and rejected except successful transaction don't want id's but else want all id's
