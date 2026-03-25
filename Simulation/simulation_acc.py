@@ -9,7 +9,7 @@ print(script_directory)
 url = "http://127.0.0.1:8000/api/accounts/"
 
 # CSV load karo
-df = pd.read_csv(r"C:\College PDF.books\Beproject\BankServerMicroService\Simulation\LI-Small_accounts.csv")
+df = pd.read_csv(r"C:\Users\kambl\Desktop\BE Project\BankServerMicroService\Simulation\LI-Small_accounts.csv")
 count = 0 
 
 # Column names check (important)
