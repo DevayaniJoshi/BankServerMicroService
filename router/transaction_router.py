@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from config.settings import KAFKA_TRANSACTION_TOPIC
 from database.db import get_db
 from models.transaction import Transaction
 from dto.transaction_create_dto import TransactionCreateDTO
@@ -7,23 +8,39 @@ from dto.transaction_response_dto import TransactionResponseDTO
 from dto.transaction_update_dto import TransactionUpdateDTO
 from fastapi import HTTPException
 from uuid import UUID
+from config.kafka_config import get_kafka_producer
+from fastapi import HTTPException
+
 
 router = APIRouter(
-    prefix="/transactions",
+    prefix="/api/transactions",
     tags=["Transactions"]
 )
 
 # CREATE
 @router.post("/", response_model=TransactionResponseDTO)
 def create_transaction(transaction: TransactionCreateDTO, db: Session = Depends(get_db)):
-    print(transaction)
-    new_transaction = Transaction(**transaction.model_dump())
-    print(new_transaction)
-    db.add(new_transaction)
-    db.commit()
-    db.refresh(new_transaction)
-    return new_transaction
+    try:
 
+        new_transaction = Transaction(**transaction.model_dump())
+
+        print(new_transaction)
+
+        db.add(new_transaction)
+        db.commit()
+        db.refresh(new_transaction)
+
+        kafka = get_kafka_producer()
+        kafka.send(KAFKA_TRANSACTION_TOPIC,TransactionResponseDTO.model_validate(new_transaction).model_dump(mode="json"))
+
+        return new_transaction
+        
+    except Exception as e:
+        print("ERROR: ",e)
+        raise HTTPException(
+            status_code=500,
+            detail=e.__cause__
+        )
 
 # GET ALL
 @router.get("/", response_model=list[TransactionResponseDTO])

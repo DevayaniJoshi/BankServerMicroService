@@ -1,22 +1,17 @@
-import pandas as pd
-import requests 
 import os
-import sys
-script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-print(script_directory)
+import pandas as pd
+import requests
+from config.settings import SERVER_URL
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# API URL
-url = "http://127.0.0.1:8000/api/accounts/"
+csv_path = os.path.join(BASE_DIR, "datasets", "HI-Small_accounts.csv")
+url = SERVER_URL + "/api/accounts"
 
-# CSV load karo
-df = pd.read_csv(r"C:\Users\kambl\Desktop\BE Project\BankServerMicroService\Simulation\LI-Small_accounts.csv")
+df = pd.read_csv(csv_path)
+TO_PROCESS_RECORDS = 10
+
 count = 0 
-
-# Column names check (important)
-print(df.columns)
-
-# Loop (5 records test ke liye)
-for i, row in df.iterrows():
+for i, row in df.head(TO_PROCESS_RECORDS).iterrows():
     try:
         data = {
             "accountId": row["Account Number"],
@@ -26,17 +21,17 @@ for i, row in df.iterrows():
             "bankName": row["Bank Name"]
         }
 
-        print(count+1)
         count = count+1
-
         response = requests.post(url, json=data)
+
         if response.status_code >= 300:
-            print("Status Code:", response.status_code)
+            print(f"ERROR: Count: {count} \nResponse Status: {response.status_code} \nResponse Body: {response.json()}")
+
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
     else:
-        print(f"Success!")
+        print(count)
     finally:
         print("Execution complete.")
 

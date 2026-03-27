@@ -1,19 +1,17 @@
+import os
 import pandas as pd
 import requests
+from config.settings import SERVER_URL
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# URL (important)
-url = "http://127.0.0.1:8000/transactions/"
+csv_path = os.path.join(BASE_DIR, "datasets", "HI-Small_Trans.csv")
+url = SERVER_URL + "/api/transactions"
 
-# CSV load
-df = pd.read_csv(r"C:\Users\kambl\Desktop\BE Project\BankServerMicroService\Simulation\LI-Small_Trans.csv")
+df = pd.read_csv(csv_path)
+TO_PROCESS_RECORDS = 10
 
-# Columns check
-print(df.columns)
-
-count = 0
-
-# First 10 records test
-for i, row in df.head(10).iterrows():
+count = 0 
+for i, row in df.head(TO_PROCESS_RECORDS).iterrows():
     try:
         data = {
             "fromBank": str(row["From Bank"]),
@@ -28,21 +26,14 @@ for i, row in df.head(10).iterrows():
         }
 
         count += 1
-        print(f"Sending Transaction {count}")
-
         response = requests.post(url, json=data)
-
-        # Debug response
-        print("Status:", response.status_code)
-        print("Response:", response.text)
-
-        if response.status_code < 300:
-            print("Success ✅")
-        else:
-            print("Error ❌")
+    
+        if response.status_code >= 300:
+            print(f"ERROR: Count: {count} \nResponse Status: {response.status_code} \nResponse Body: {response.json()}")
 
     except Exception as e:
-        print("Exception:", e)
-
+        print(f"An unexpected error occurred: {e}")
+    else:
+        print(count)
     finally:
-        print("Done\n")
+        print("Execution complete.")

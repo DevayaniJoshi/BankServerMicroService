@@ -1,9 +1,12 @@
+# IGNORE LIST
+
 # Virtual Environment
 venv/
 .env/
 .env
 .env.bak/
 
+.venv
 # Python cache
 __pycache__/
 *.py[cod]
@@ -38,3 +41,9 @@ dist/
 *.sqlite3
 
 **.csv
+**.txt
+
+# ALLOW LIST
+!requirements.txt
+!docs/FunctionalRequirements.txt
+!datasets/**.zip
