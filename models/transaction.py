@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 
+
 class Transaction(Base):
     __tablename__ = "transactions"
 
@@ -25,3 +26,5 @@ class Transaction(Base):
     paymentCurrency = Column(String, nullable=False)
 
     paymentFormat = Column(String, nullable=False)
+
+    status = Column(String, default="SUCCESS")

@@ -14,6 +14,8 @@ class TransactionResponseDTO(BaseModel):
     amountPaid: float
     paymentCurrency: str
     paymentFormat: str
+    status: str
+
 
     class Config:
         from_attributes = True
