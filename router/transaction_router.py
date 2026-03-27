@@ -9,6 +9,7 @@ from dto.transaction_update_dto import TransactionUpdateDTO
 from fastapi import HTTPException
 from uuid import UUID
 from config.kafka_config import get_kafka_producer
+from config.settings import ENABLE_KAFKA
 from fastapi import HTTPException
 
 
@@ -30,8 +31,9 @@ def create_transaction(transaction: TransactionCreateDTO, db: Session = Depends(
         db.commit()
         db.refresh(new_transaction)
 
-        kafka = get_kafka_producer()
-        kafka.send(KAFKA_TRANSACTION_TOPIC,TransactionResponseDTO.model_validate(new_transaction).model_dump(mode="json"))
+        if ENABLE_KAFKA:
+            kafka = get_kafka_producer()
+            kafka.send(KAFKA_TRANSACTION_TOPIC,TransactionResponseDTO.model_validate(new_transaction).model_dump(mode="json"))
 
         return new_transaction
         

@@ -32,8 +32,6 @@ for i, row in df.head(TO_PROCESS_RECORDS).iterrows():
         print(f"An unexpected error occurred: {e}")
     else:
         print(count)
-    finally:
-        print("Execution complete.")
 
 
 
