@@ -27,15 +27,28 @@ def create_transaction(transaction: TransactionCreateDTO, db: Session = Depends(
 
     if not account:
         raise HTTPException(status_code=400, detail="Sender account does not exist")
+    
+    account = db.query(Account).filter(
+    Account.accountId == transaction.toAccount
+).first()
 
-    # 🔥 STEP 2: Filter Check
+    if not account:
+       raise HTTPException(status_code=400, detail="Receiver account does not exist")
+
+        
+
+    #  STEP 2: Filter Check
     from models.account_filter import AccountFilter
 
     filter_entry = db.query(AccountFilter).filter(
         AccountFilter.accountId == transaction.fromAccount
     ).first()
 
-    # 🔥 STEP 3: Status Decision
+    filter_entry = db.query(AccountFilter).filter(
+        AccountFilter.accountId == transaction.toAccount
+    ).first()    
+
+    # u STEP 3: Status Decision
     if filter_entry:
         if filter_entry.blockingLevel.upper() == "BLACK":
             status = "BLOCKED"
