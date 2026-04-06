@@ -11,8 +11,7 @@ from config.kafka_config import get_kafka_producer
 from config.settings import ENABLE_KAFKA
 from models.account import Account
 
-# 🔥 CACHE IMPORT
-from fastapi_cache.decorator import cache
+from database.cache import get_cache,set_cache
 
 router = APIRouter(
     prefix="/api/transactions",
@@ -152,15 +151,16 @@ def get_last_n_transactions(
 
     return transactions
 
-
-# 🔥 GET BY ID (CACHE FIXED)
 @router.get("/{transactionId}", response_model=TransactionResponseDTO)
-@cache(expire=60)
-async def get_transaction(
-    request: Request,   # ✅ IMPORTANT FIX
-    transactionId: UUID,
-    db: Session = Depends(get_db)
-):
+async def get_transaction( transactionId: UUID, db: Session = Depends(get_db)):
+    
+    cache_key = f"txn:{transactionId}"
+
+    # ✅ 1. Try cache
+    cached = get_cache(cache_key)
+    if cached:
+        print("⚡ CACHE HIT")
+        return cached
 
     print("🔥 DB HIT")
 
@@ -171,8 +171,9 @@ async def get_transaction(
     if not transaction:
         raise HTTPException(status_code=404, detail="Transaction not found")
 
-    return transaction
+    set_cache(cache_key, TransactionResponseDTO.model_validate(transaction), ttl=60)
 
+    return TransactionResponseDTO.model_validate(transaction)
 
 # PATCH - Partial Update
 @router.patch("/{transactionId}", response_model=TransactionResponseDTO)
