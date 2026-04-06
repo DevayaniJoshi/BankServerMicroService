@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from config.settings import KAFKA_TRANSACTION_TOPIC
 from database.db import get_db
@@ -10,6 +10,9 @@ from uuid import UUID
 from config.kafka_config import get_kafka_producer
 from config.settings import ENABLE_KAFKA
 from models.account import Account
+
+# 🔥 CACHE IMPORT
+from fastapi_cache.decorator import cache
 
 router = APIRouter(
     prefix="/api/transactions",
@@ -93,7 +96,7 @@ def get_all_transactions(db: Session = Depends(get_db)):
     return db.query(Transaction).all()
 
 
-# 🔥 ANALYTICS API (NEW)
+# 🔥 ANALYTICS API
 @router.get("/stats")
 def get_transaction_stats(db: Session = Depends(get_db)):
 
@@ -150,9 +153,17 @@ def get_last_n_transactions(
     return transactions
 
 
-# GET BY ID
+# 🔥 GET BY ID (CACHE FIXED)
 @router.get("/{transactionId}", response_model=TransactionResponseDTO)
-def get_transaction(transactionId: UUID, db: Session = Depends(get_db)):
+@cache(expire=60)
+async def get_transaction(
+    request: Request,   # ✅ IMPORTANT FIX
+    transactionId: UUID,
+    db: Session = Depends(get_db)
+):
+
+    print("🔥 DB HIT")
+
     transaction = db.query(Transaction).filter(
         Transaction.transactionId == transactionId
     ).first()
