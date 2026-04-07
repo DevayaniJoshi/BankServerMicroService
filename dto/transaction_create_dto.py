@@ -10,3 +10,4 @@ class TransactionCreateDTO(BaseModel):
     amountPaid: float
     paymentCurrency: str
     paymentFormat: str
+    timestamp: str

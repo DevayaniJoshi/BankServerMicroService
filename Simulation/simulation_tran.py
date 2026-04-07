@@ -37,6 +37,7 @@ for i, row in df.head(TO_PROCESS_RECORDS).iterrows():
             "amountPaid": float(row["Amount Paid"]),
             "paymentCurrency": row["Payment Currency"],
             "paymentFormat": row["Payment Format"]
+            
         }
 
         count += 1

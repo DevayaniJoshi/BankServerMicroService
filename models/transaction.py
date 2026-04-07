@@ -11,8 +11,8 @@ class Transaction(Base):
 
     transactionId = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
 
-    timestamp = Column(DateTime, default=datetime.utcnow)
-
+    timestamp = Column(String, nullable=False)
+ 
     fromBank = Column(String, nullable=False)
     fromAccount = Column(String, nullable=False)
 
