@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Float, String, DateTime
 from database.db import Base
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
@@ -11,7 +10,7 @@ class Transaction(Base):
 
     transactionId = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
 
-    timestamp = Column(String, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
  
     fromBank = Column(String, nullable=False)
     fromAccount = Column(String, nullable=False)
