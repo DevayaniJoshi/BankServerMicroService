@@ -9,6 +9,7 @@ import time
 # default value
 TO_PROCESS_RECORDS = 30
 TIME_DELAY = 100 #ms
+SKIP_ROWS = 0
 
 # override if argument is passed
 if len(sys.argv) > 1:
@@ -16,16 +17,19 @@ if len(sys.argv) > 1:
 
 if len(sys.argv) > 2:
     TO_PROCESS_RECORDS = int(sys.argv[1])
-    TIME_DELAY = int(sys.argv[2])
+    SKIP_ROWS = int(sys.argv[2])
+
+if len(sys.argv) > 3:
+    TO_PROCESS_RECORDS = int(sys.argv[1])
+    SKIP_ROWS = int(sys.argv[2])
+    TIME_DELAY = int(sys.argv[3])
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 csv_path = os.path.join(BASE_DIR, "datasets", "HI-Small_Trans.csv")
 zip_path = os.path.join(BASE_DIR, "datasets", "HI-Small_Trans.zip")
 
-# override if argument is passed
-if len(sys.argv) > 1:
-    TO_PROCESS_RECORDS = int(sys.argv[1])
 url = SERVER_URL + "/api/transactions"
 
 if not os.path.exists(csv_path):
@@ -38,17 +42,18 @@ if not os.path.exists(csv_path):
     else:
         raise FileNotFoundError("Neither CSV nor ZIP file found!")
 
-df = pd.read_csv(csv_path)
-
 print("\n=== Transaction Processor Started ===")
+print(f"Offset : {SKIP_ROWS}")
 print(f"Records to process : {TO_PROCESS_RECORDS}")
 print(f"Time delay         : {TIME_DELAY} ms")
 print(f"API Endpoint       : {url}")
 print(f"CSV Path           : {csv_path}")
 print("========================================\n")
 
+df = pd.read_csv(csv_path)
+df = df.iloc[SKIP_ROWS: SKIP_ROWS + TO_PROCESS_RECORDS]
 count = 0 
-for i, row in df.head(TO_PROCESS_RECORDS).iterrows():
+for i, row in df.iterrows():
     try:
         data = {
             "fromBank": str(row["From Bank"]),
